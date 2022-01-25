@@ -26,7 +26,7 @@ def deploy_box():
     # hooking up a proxy to our implementation contract
     print("Deploying Proxy Admin ...")
     proxy_admin = ProxyAdmin.deploy({"from": account})
-    print(f"... Done! Proxy deployed to {proxy_admin.address}\n")
+    print(f"... Done! Proxy Admin deployed to {proxy_admin.address}\n")
 
     # encoding a function to be our initialiser
     initialiser = box.setValue, 1  # function_to_call, first_parameter

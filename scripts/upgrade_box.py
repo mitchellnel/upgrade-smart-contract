@@ -9,9 +9,12 @@ def upgrade_box():
     proxy_admin = ProxyAdmin[-1]
     proxy = TransparentUpgradeableProxy[-1]
 
-    box_v2 = BoxV2.deploy({"from": account})
+    box_v2 = BoxV2.deploy(
+        {"from": account},
+        publish_source=config["networks"][network.show_active()]["verify"],
+    )
 
-    print("Upgrading proxy ...")
+    print(f"Upgrading proxy at {proxy.address}...")
     upgrade_txn = upgrade(
         account, proxy, box_v2.address, proxy_admin_contract=proxy_admin
     )
@@ -20,7 +23,7 @@ def upgrade_box():
     # assigning ABI to a proxy so we can call implementation contract functions on the proxy
     proxy_box = Contract.from_abi("BoxV2", proxy.address, BoxV2.abi)
 
-    print("Using proxy to implement value of 33 to 34 on BoxV2 ...")
+    print("Using proxy to increment value of 33 to 34 on BoxV2 ...")
     inc_txn = proxy_box.increment({"from": account})
     inc_txn.wait(1)
     get_val = proxy_box.getValue()
